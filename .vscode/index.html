@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Student Documents - Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="centered">
+    <div class="card login-card">
+      <h1>Student Documents Portal</h1>
+      <p class="muted">Login as Student or CPG</p>
+
+      <label for="role">Select Role:</label>
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="cpg">CPG</option>
+      </select>
+
+      <label for="uid">User ID</label>
+      <input id="uid" type="text" placeholder="22BEE001 or CPG" />
+
+      <button id="loginBtn">Login</button>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const role = document.getElementById('role').value;
+      const uid = document.getElementById('uid').value.trim().toUpperCase();
+
+      if (role === "student") {
+        if (!/^22BEE\d{3}$/.test(uid)) {
+          alert("Enter a valid roll number (e.g. 22BEE001)");
+          return;
+        }
+        window.location.href = 'student.html?roll=' + encodeURIComponent(uid);
+      } 
+      else if (role === "cpg") {
+        if (uid !== "CPG") {
+          alert("Invalid CPG ID — use 'CPG' to login.");
+          return;
+        }
+        window.location.href = 'cpg.html';
+      }
+    });
+  </script>
+</body>
+</html>

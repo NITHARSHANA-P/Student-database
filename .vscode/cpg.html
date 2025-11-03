@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CPG Page</title>
+</head>
+<body>
+
+  <h2>CPG Dashboard</h2>
+
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Roll Number</th>
+        <th>Resume Link</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table><br>
+
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    const table = document.getElementById("tableBody");
+    let data = JSON.parse(localStorage.getItem("resumes")) || {};
+
+    // Function to show all students in the table
+    function loadData() {
+      table.innerHTML = ""; // clear old rows
+      for (let roll in data) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${roll}</td>
+          <td><a href="${data[roll]}" target="_blank">View Resume</a></td>
+          <td><button onclick="deleteStudent('${roll}')">Delete</button></td>
+        `;
+        table.appendChild(row);
+      }
+    }
+
+    // Function to delete a student
+    function deleteStudent(roll) {
+      if (confirm("Are you sure you want to delete " + roll + "?")) {
+        delete data[roll];
+        localStorage.setItem("resumes", JSON.stringify(data));
+        loadData(); // refresh the table
+        alert("Deleted " + roll + " successfully!");
+      }
+    }
+
+    // Logout button
+    function logout() {
+      window.location.href = "index.html";
+    }
+
+    // Load data when page opens
+    loadData();
+  </script>
+
+</body>
+</html>
