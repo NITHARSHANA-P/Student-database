@@ -5,25 +5,98 @@
   <title>Student Documents - Login</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f4f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-card {
+      width: 380px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .login-card h1 {
+      background-color: #3b056d;
+      color: white;
+      margin: 0;
+      padding: 15px;
+      font-size: 1.5rem;
+    }
+
+    .login-card h3 {
+      margin-top: 15px;
+      color: #3b056d;
+      font-weight: 500;
+    }
+
+    .login-content {
+      padding: 25px 35px 40px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 10px;
+      background-color: #3b056d;
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #56238c;
+    }
+
+  </style>
 </head>
 <body>
-  <main class="centered">
-    <div class="card login-card">
-      <h1>Student Documents Portal</h1>
-      <p class="muted">Login as Student or CPG</p>
-
-      <label for="role">Select Role:</label>
+  <div class="login-card">
+    <h1>Student Documents Portal</h1>
+    <h3>Login as Student or CPG</h3>
+    <div class="login-content">
+      <label for="role">Select User</label>
       <select id="role">
         <option value="student">Student</option>
         <option value="cpg">CPG</option>
       </select>
 
       <label for="uid">User ID</label>
-      <input id="uid" type="text" placeholder="22BEE001 or CPG" />
+      <input id="uid" type="text" placeholder="Enter your ID (e.g. 22BEE001)" />
 
       <button id="loginBtn">Login</button>
     </div>
-  </main>
+  </div>
 
   <script>
     document.getElementById('loginBtn').addEventListener('click', () => {
@@ -36,8 +109,7 @@
           return;
         }
         window.location.href = 'student.html?roll=' + encodeURIComponent(uid);
-      } 
-      else if (role === "cpg") {
+      } else if (role === "cpg") {
         if (uid !== "CPG") {
           alert("Invalid CPG ID — use 'CPG' to login.");
           return;
@@ -45,6 +117,25 @@
         window.location.href = 'cpg.html';
       }
     });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlNJN_JB5LcdgS9v9N6mi40t3hEUPCkTU",
+      authDomain: "student-resume-b23c6.firebaseapp.com",
+      databaseURL: "https://student-resume-b23c6-default-rtdb.firebaseio.com",
+      projectId: "student-resume-b23c6",
+      storageBucket: "student-resume-b23c6.firebasestorage.app",
+      messagingSenderId: "488629224813",
+      appId: "1:488629224813:web:bed626842779ebf106c664",
+      measurementId: "G-W420HFS8MX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
   </script>
 </body>
 </html>
