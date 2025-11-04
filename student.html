@@ -1,45 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Student Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f4f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .dashboard {
+      width: 420px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .dashboard h2 {
+      background-color: #3b056d;
+      color: white;
+      margin: 0;
+      padding: 15px;
+      font-size: 1.6rem;
+    }
+
+    .content {
+      padding: 30px 35px;
+      text-align: left;
+    }
+
+    #welcome {
+      text-align: center;
+      color: #3b056d;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      margin-top: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background-color: #3b056d;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: rgb(13, 101, 13);
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 10px;
+      color: green;
+      font-weight: 500;
+    }
+
+    .logout-btn {
+      background-color: #3b056d;
+      margin-top: 10px;
+    }
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
 </head>
 <body>
+  <div class="dashboard">
+    <h2>Student Dashboard</h2>
+    <div class="content">
+      <p id="welcome"></p>
 
-  <h2>Student Dashboard</h2>
-  <p id="welcome"></p>
+      <label for="resume">Enter your Resume Link:</label>
+      <input type="text" id="resume" placeholder="Paste your link here" />
 
-  <label>Enter your Resume Link:</label><br>
-  <input type="text" id="resume" placeholder="Paste your link here" size="50"><br><br>
+      <button onclick="saveResume()">Save</button>
+      <p id="message"></p>
 
-  <button onclick="saveResume()">Save</button>
-  <p id="message"></p>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
-  <button onclick="logout()">Logout</button>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlNJN_JB5LcdgS9v9N6mi40t3hEUPCkTU",
+      authDomain: "student-resume-b23c6.firebaseapp.com",
+      projectId: "student-resume-b23c6",
+      storageBucket: "student-resume-b23c6.appspot.com",
+      messagingSenderId: "488629224813",
+      appId: "1:488629224813:web:bed626842779ebf106c664"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Get roll number from URL
     const params = new URLSearchParams(window.location.search);
     const roll = params.get("roll");
     document.getElementById("welcome").innerText = "Welcome " + roll;
 
-    function saveResume() {
-      const resume = document.getElementById("resume").value.trim();
-      if (!resume) {
+    // Save Resume Function
+    window.saveResume = async function () {
+      const resumeLink = document.getElementById("resume").value.trim();
+      if (!resumeLink) {
         alert("Please paste your resume link!");
         return;
       }
 
-      // save in localStorage
-      let data = JSON.parse(localStorage.getItem("resumes")) || {};
-      data[roll] = resume;
-      localStorage.setItem("resumes", JSON.stringify(data));
+      try {
+        await setDoc(doc(db, "uploads", roll), {
+          rollNo: roll,
+          resumeLink: resumeLink,
+          timestamp: new Date().toISOString()
+        });
 
-      document.getElementById("message").innerText = "Saved successfully!";
-    }
+        document.getElementById("message").innerText = "✅ Resume saved successfully!";
+      } catch (error) {
+        console.error("❌ Error saving:", error);
+        alert("Error saving resume. Please check console.");
+      }
+    };
 
-    function logout() {
+    // Logout
+    window.logout = function () {
       window.location.href = "index.html";
-    }
+    };
   </script>
-
 </body>
 </html>
